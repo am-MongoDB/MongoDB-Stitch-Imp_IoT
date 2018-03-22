@@ -19,6 +19,7 @@ exports = function(data){
       "External": darkskyJSON,
     };
     status.Readings.light = (100*(data.light/65536));
+  context.functions.execute("controlHumidity", data.temp, data.humid);
 
   return TempData.insertOne(status);
 };

@@ -1,0 +1,15 @@
+{
+    "id": "5ab3eb3fcfb737c5fdde821b",
+    "name": "IFTTT",
+    "actions": [
+        "post",
+        "get"
+    ],
+    "when": {
+        "%%args.url.host": {
+            "%in": [
+                "maker.ifttt.com"
+            ]
+        }
+    }
+}

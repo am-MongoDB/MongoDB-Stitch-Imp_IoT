@@ -1,5 +1,5 @@
 {
-    "app_id": "<TODO: Your stitch App ID goes here>",
+    "app_id": "<TODO: Add your own App ID here>",
     "config_version": 20180301,
     "name": "impTemp",
     "security": {}
