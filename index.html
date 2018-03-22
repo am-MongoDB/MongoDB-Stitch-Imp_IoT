@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+
+</style>
+<svg width="960" height="500"></svg>
+<script src="//d3js.org/d3.v4.min.js"></script>
+<script src="https://s3.amazonaws.com/stitch-sdks/js/library/v3/stable/stitch.min.js"></script>
+<body onload="simpleAuth();">
+  <script>
+  let stitchClient, cluster, data;
+
+  // Replace this with your app's id
+  const appId = "imptemp-sobpa"
+
+  var duration = 86400000,
+    now = Date.now();
+
+  var svg = d3.select("svg"),
+      margin = {top: 20, right: 80, bottom: 30, left: 50},
+      width = svg.attr("width") - margin.left - margin.right,
+      height = svg.attr("height") - margin.top - margin.bottom,
+      g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+  var parseTime = d3.timeParse("%Y%m%d");
+
+  var x = d3.scaleTime().domain([now - duration, now]).range([0, width]),
+      y = d3.scaleLinear().domain([-10, 30]).range([height, 0]);
+      z = d3.scaleOrdinal(d3.schemeCategory10);
+
+  var line = d3.line()
+      .curve(d3.curveBasis)
+      .x(function(d) { return x(d.Timestamp); })
+      .y(function(d) { return y(d.temperature); });
+
+  // Simple login with anonymous authentication
+  function simpleAuth() {
+    stitch.StitchClientFactory
+      .create(appId)
+      .then(client => {
+        stitchClient = client;
+        cluster = client.service("mongodb", "mongodb-atlas");
+        stitchClient.login().then(function () { buildGraph() });
+      });
+  }
+
+  function buildGraph() {
+
+
+      stitchClient.executeFunction("TempTimeline", (now - duration), now).then(
+        locations => {
+          x.domain(d3.extent(locations[0].values, function(d) { return d.Timestamp; }));
+
+          y.domain([
+            d3.min(locations, function(l) { return d3.min(l.values, function(d) { return d.temperature; }); }),
+            d3.max(locations, function(l) { return d3.max(l.values, function(d) { return d.temperature; }); })
+          ]);
+
+          z.domain(locations.map(function(l) { return l.id; }));
+
+          g.append("g")
+              .attr("class", "axis axis--x")
+              .attr("transform", "translate(0," + height + ")")
+              .call(d3.axisBottom(x));
+
+          g.append("g")
+              .attr("class", "axis axis--y")
+              .call(d3.axisLeft(y))
+            .append("text")
+              .attr("transform", "rotate(-90)")
+              .attr("y", 6)
+              .attr("dy", "0.71em")
+              .attr("fill", "#000")
+              .text("Temperature, ºC");
+
+          var location = g.selectAll(".location")
+            .data(locations)
+            .enter().append("g")
+              .attr("class", "location");
+
+          location.append("path")
+              .attr("class", "line")
+              .attr("d", function(d) { return line(d.values); })
+              .style("stroke", function(d) { return z(d.id); });
+
+          location.append("text")
+              .datum(function(d) { return {id: d.id, value: d.values[d.values.length - 1]}; })
+              .attr("transform", function(d) { return "translate(" + x(d.value.Timestamp) + "," + y(d.value.temperature) + ")"; })
+              .attr("x", 3)
+              .attr("dy", "0.35em")
+              .style("font", "10px sans-serif")
+              .text(function(d) { return d.id; });
+        }, 
+        error => {
+          throw error
+        }
+      );
+
+  }
+  </script>
+</body>

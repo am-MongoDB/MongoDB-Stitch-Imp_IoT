@@ -1,0 +1,14 @@
+{
+  "name": "stitch-imp-graph",
+  "version": "1.0.0",
+  "description": "Temperature graph for MongoDB Stitch/ElectricImp demo",
+  "scripts": {
+    "start": "http-server &"
+  },
+  "author": "Andrew Morgan",
+  "license": "MIT",
+  "dependencies": {
+    "http-server": "^0.10.0",
+    "mongodb-stitch": "^3.0.0"
+  }
+}
