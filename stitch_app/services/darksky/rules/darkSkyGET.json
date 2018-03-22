@@ -1,0 +1,14 @@
+{
+    "id": "5aa002208f25b971a6e64d1f",
+    "name": "darkSkyGET",
+    "actions": [
+        "get"
+    ],
+    "when": {
+        "%%args.url.host": {
+            "%in": [
+                "api.darksky.net"
+            ]
+        }
+    }
+}

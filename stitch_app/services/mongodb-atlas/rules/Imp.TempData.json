@@ -1,0 +1,30 @@
+{
+    "id": "5a7883e08f25b911c8e9f362",
+    "namespace": "Imp.TempData",
+    "filters": [
+        {
+            "match_expression": {},
+            "when": {}
+        }
+    ],
+    "fields": {
+        "owner_id": {
+            "valid": {
+                "%or": [
+                    {
+                        "%%prev": "%%user.id"
+                    },
+                    {
+                        "%%prev": {
+                            "%exists": false
+                        }
+                    }
+                ]
+            }
+        }
+    },
+    "other_fields": {},
+    "write": {},
+    "read": {},
+    "valid": {}
+}
