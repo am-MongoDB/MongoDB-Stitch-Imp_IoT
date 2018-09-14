@@ -12,3 +12,5 @@ stitch_app/values/DarkSkyKey.json:    "value": "<TODO: Add your own key here?>",
 stitch_app/values/MakerIFTTKey.json:    "value": "<TODO: Add your own key here>",
 stitch_app/stitch.json:    "app_id": "<TODO: Add your own App ID here>",
 ```
+
+Read the [MongoDB docs](https://docs.mongodb.com/stitch/import-export/create-stitch-app/ "MongoDB Stitch – serverless platform. Importing apps") if you don't already know how to import apps using the MongoDB Stitch CLI.
